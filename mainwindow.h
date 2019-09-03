@@ -5,6 +5,8 @@
 #include <QGraphicsView>
 #include <QLayout>
 #include <QPushButton>
+#include <QLabel>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QGraphicsItem>
 #include <QList>
@@ -19,17 +21,20 @@ public:
     ~MainWindow();
 
 private:
-    QWidget *widget;
+    QWidget *mainWidget;
     QGridLayout *mainLayout;
     QVBoxLayout *settingLayout;
     QPushButton *button;
+    QLabel *cellNumLabel;
     QGraphicsScene* scene;
     QGraphicsView* view;
     bool** cellPlate;
+    bool** bufferPlate;
 
     void initBlankEnvironment();
     void initCells();
     void updateEnvironment();
+
 private slots:
     void grow();
 };

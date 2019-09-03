@@ -2,7 +2,7 @@
 
 static const int sceneStart = 0;
 static const int sceneSize = 600;
-static const int cellSize = 20;
+static const int cellSize = 10;
 static const int cellNum = sceneSize/cellSize;
 
 MainWindow::MainWindow(QWidget *parent)
@@ -16,42 +16,54 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-
+    for (int i = 0; i < cellNum; ++i) {
+        delete[] cellPlate[i];
+    }
+    delete[] cellPlate;
 }
-
 
 void MainWindow::initBlankEnvironment()
 {
     setWindowTitle("Cellular Automaton");
-    setFixedSize(800,800);
+    mainWidget = new QWidget();
+    mainLayout = new QGridLayout(mainWidget);
+    settingLayout = new QVBoxLayout();
+    button = new QPushButton("Grow");
+    cellNumLabel = new QLabel("Cell Number:"+QString::number(cellNum*cellNum));
+    settingLayout->addWidget(button);
+    settingLayout->addWidget(cellNumLabel);
+    mainLayout->addLayout(settingLayout,0,1);
+
     scene = new QGraphicsScene(this);
     scene->setSceneRect(sceneStart,sceneStart,sceneSize,sceneSize);
     for (int colPos = sceneStart; colPos <= sceneStart + sceneSize - cellSize; colPos += cellSize) {
         for (int rowPos = sceneStart; rowPos <= sceneStart + sceneSize - cellSize; rowPos += cellSize) {
-           scene->addRect(colPos,rowPos,cellSize,cellSize,QPen(),QBrush());
+           scene->addRect(colPos,rowPos,cellSize,cellSize);
         }
     }
     view = new QGraphicsView(scene);
     view->setFixedSize(sceneSize + 2 * cellSize, sceneSize + 2 * cellSize);
-    widget = new QWidget();
-    mainLayout = new QGridLayout(widget);
     mainLayout->addWidget(view,0,0);
-    settingLayout = new QVBoxLayout();
-    button = new QPushButton("Grow");
-    settingLayout->addWidget(button);
-    mainLayout->addLayout(settingLayout,0,1);
-    setCentralWidget(widget);
+
+    setCentralWidget(mainWidget);
 }
 
 void MainWindow::initCells()
 {
     cellPlate = new bool*[cellNum]();
+    bufferPlate = new bool*[cellNum]();
     for (int i = 0; i < cellNum; ++i) {
         cellPlate[i] = new bool[cellNum]();
+        bufferPlate[i] = new bool[cellNum]();
     }
-    cellPlate[cellNum/2][cellNum/2] = true;
-    cellPlate[cellNum/2+1][cellNum/2+1] = true;
-    cellPlate[cellNum/2-1][cellNum/2+1] = true;
+    cellPlate[cellNum/2][cellNum/4-1] = true;
+    cellPlate[cellNum/2][cellNum/4+1] = true;
+    cellPlate[cellNum/2-1][cellNum/4] = true;
+    cellPlate[cellNum/2+1][cellNum/4] = true;
+    cellPlate[cellNum/2][cellNum*3/4-1] = true;
+    cellPlate[cellNum/2][cellNum*3/4+1] = true;
+    cellPlate[cellNum/2-1][cellNum*3/4] = true;
+    cellPlate[cellNum/2+1][cellNum*3/4] = true;
 }
 
 void MainWindow::updateEnvironment()
@@ -59,7 +71,7 @@ void MainWindow::updateEnvironment()
     QList<QGraphicsItem*> itemList = scene->items(Qt::AscendingOrder);
     int i=0,j=0;
     for (QGraphicsItem* item: itemList) {
-        QGraphicsRectItem* rectItem = (QGraphicsRectItem*) item;
+        QGraphicsRectItem* rectItem = qgraphicsitem_cast<QGraphicsRectItem*>(item);
         if (cellPlate[i][j]) {
             rectItem->setBrush(QBrush(Qt::black));
         }
@@ -76,10 +88,6 @@ void MainWindow::updateEnvironment()
 
 void MainWindow::grow()
 {
-    bool** nextPlate = new bool*[cellNum]();
-    for (int i = 0; i < cellNum; ++i) {
-        nextPlate[i] = new bool[cellNum]();
-    }
     for (int i = 1; i < cellNum - 1; ++i) {
         for (int j = 1; j < cellNum - 1; ++j) {
             int count = 0;
@@ -108,16 +116,16 @@ void MainWindow::grow()
                 count++;
             }
             if (count == 2 || count == 3) {
-                nextPlate[i][j]=true;
+                bufferPlate[i][j]=true;
             }
             else {
-                nextPlate[i][j]=false;
+                bufferPlate[i][j]=false;
             }
         }
     }
     for (int i = 1; i < cellNum - 1; ++i) {
         for (int j = 1; j < cellNum - 1; ++j) {
-            cellPlate[i][j] = nextPlate[i][j];
+            cellPlate[i][j] = bufferPlate[i][j];
         }
     }
     updateEnvironment();
