@@ -7,10 +7,14 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QLineEdit>
+#include <QComboBox>
 #include <QMainWindow>
 #include <QGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
 #include <QList>
 #include <QDebug>
+
+#include "cellscene.h"
 
 class MainWindow : public QMainWindow
 {
@@ -22,21 +26,15 @@ public:
 
 private:
     QWidget *mainWidget;
-    QGridLayout *mainLayout;
+    QHBoxLayout *mainLayout;
     QVBoxLayout *settingLayout;
     QPushButton *button;
     QLabel *cellNumLabel;
-    QGraphicsScene* scene;
+    QComboBox *cellNumComboBox;
+    CellScene* scene;
     QGraphicsView* view;
-    bool** cellPlate;
-    bool** bufferPlate;
 
-    void initBlankEnvironment();
-    void initCells();
-    void updateEnvironment();
-
-private slots:
-    void grow();
+    void initWidgets();
 };
 
 #endif // MAINWINDOW_H
