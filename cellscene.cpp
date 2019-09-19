@@ -83,21 +83,47 @@ void CellScene::grow()
     QList<QPoint>* changedCells = new QList<QPoint>();
     for (int i = 1; i < cellNum - 1; ++i) {
         for (int j = 1; j < cellNum - 1; ++j) {
+            int count = 0;
+            if (cellData[i-1][j-1]) {
+                ++count;
+            }
             if (cellData[i-1][j]) {
-                changedCells->append(QPoint(i-1,j));
+                ++count;
+            }
+            if (cellData[i-1][j+1]) {
+                ++count;
+            }
+            if (cellData[i][j-1]) {
+                ++count;
+            }
+            if (cellData[i][j+1]) {
+                ++count;
+            }
+            if (cellData[i+1][j-1]) {
+                ++count;
+            }
+            if (cellData[i+1][j]) {
+                ++count;
+            }
+            if (cellData[i+1][j+1]) {
+                ++count;
+            }
+            if (count == 2) {
                 changedCells->append(QPoint(i,j));
+            }
+            if (count > 4) {
+                changedCells->append(QPoint(i-1,j));
+                changedCells->append(QPoint(i,j-1));
+                changedCells->append(QPoint(i,j+1));
+                changedCells->append(QPoint(i,j));
+                changedCells->append(QPoint(i+1,j));
             }
         }
     }
     for (QPoint cellPoint: *changedCells) {
         int row = cellPoint.x();
         int col = cellPoint.y();
-        if (cellData[row][col]) {
-            cellData[row][col] = false;
-        }
-        else {
-            cellData[row][col] = true;
-        }
+        cellData[row][col] = !cellData[row][col];
     }
     updateScene();
 }
@@ -115,10 +141,5 @@ void CellScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     int row = eventPoint.toPoint().y()/cellSize;
     int col = eventPoint.toPoint().x()/cellSize;
-    if (cellData[row][col]) {
-        cellData[row][col] = false;
-    }
-    else {
-        cellData[row][col] = true;
-    }
+    cellData[row][col] = !cellData[row][col];
 }
