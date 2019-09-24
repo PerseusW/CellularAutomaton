@@ -24,15 +24,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    void keyPressEvent(QKeyEvent* event);
+
 private:
     QWidget *mainWidget;
     QHBoxLayout *mainLayout;
     QVBoxLayout *settingLayout;
     QPushButton *button;
     QLabel *cellNumLabel;
-    QComboBox *cellNumComboBox;
     CellScene* scene;
-    QGraphicsView* view;
 
     void initWidgets();
 };

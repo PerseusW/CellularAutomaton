@@ -7,6 +7,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
 #include <QDebug>
+#include <QComboBox>
 
 class CellScene : public QGraphicsScene
 {
@@ -15,9 +16,8 @@ public:
     CellScene(QObject *parent = nullptr);
     ~CellScene();
 
-    int getSceneSize();
-    int getCellNum();
-    QStringList getValidCellNums();
+    QGraphicsView* getView();
+    QComboBox* getValidCellNums();
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent*);
 
@@ -28,6 +28,8 @@ private:
     bool** cellData;
     void initSceneBySize();
     void updateScene();
+
+    int getSurroundingCellNum(int,int);
 
 public slots:
     void changeCellNum(QString);
