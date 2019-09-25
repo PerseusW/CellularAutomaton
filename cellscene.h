@@ -3,11 +3,11 @@
 
 #include <QGraphicsScene>
 #include <QGraphicsView>
-#include <QObject>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
-#include <QDebug>
+#include <QLabel>
 #include <QComboBox>
+#include <QVBoxLayout>
 
 class CellScene : public QGraphicsScene
 {
@@ -16,8 +16,13 @@ public:
     CellScene(QObject *parent = nullptr);
     ~CellScene();
 
-    QGraphicsView* getView();
-    QComboBox* getValidCellNums();
+    QGraphicsView* getMainView();
+    QVBoxLayout* getCellNum();
+
+public slots:
+    void changeCellNum(QString);
+    void grow();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent*);
 
@@ -26,14 +31,12 @@ private:
     int cellNum;
     int cellSize;
     bool** cellData;
-    void initSceneBySize();
+    void initScene();
     void updateScene();
 
     int getSurroundingCellNum(int,int);
 
-public slots:
-    void changeCellNum(QString);
-    void grow();
+
 };
 
 #endif // CELLSCENE_H

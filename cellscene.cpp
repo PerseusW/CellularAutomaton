@@ -6,7 +6,7 @@ CellScene::CellScene(QObject *parent)
     sceneSize = 600;
     cellNum = 50;
     cellSize = sceneSize/cellNum;
-    initSceneBySize();
+    initScene();
 }
 
 CellScene::~CellScene()
@@ -17,30 +17,32 @@ CellScene::~CellScene()
     delete[] cellData;
 }
 
-QGraphicsView *CellScene::getView()
+QGraphicsView* CellScene::getMainView()
 {
     QGraphicsView* view = new QGraphicsView(this);
     view->setFixedSize(sceneSize+20,sceneSize+20);
     return view;
 }
 
-QComboBox *CellScene::getValidCellNums()
+QVBoxLayout* CellScene::getCellNum()
 {
-    QStringList list;
+    QComboBox* comboBox = new QComboBox();
     for (int i = 3; i <= sceneSize/3; ++i) {
         if (sceneSize%i==0) {
-            list.append(QString::number(i));
+            comboBox->addItem(QString::number(i));
         }
     }
-    QComboBox* comboBox = new QComboBox();
-    comboBox->addItems(list);
     comboBox->setCurrentText(QString::number(cellNum));
     connect(comboBox,SIGNAL(currentTextChanged(QString)),
             this,SLOT(changeCellNum(QString)));
-    return comboBox;
+    QVBoxLayout *layout = new QVBoxLayout();
+    QLabel *label = new QLabel("Cell Number:");
+    layout->addWidget(label);
+    layout->addWidget(comboBox);
+    return layout;
 }
 
-void CellScene::initSceneBySize()
+void CellScene::initScene()
 {
     cellData = new bool*[cellNum]();
     for (int i = 0; i < cellNum; ++i) {
@@ -107,7 +109,7 @@ void CellScene::changeCellNum(QString string)
 {
     cellNum = string.toInt();
     cellSize = sceneSize/cellNum;
-    initSceneBySize();
+    initScene();
 }
 
 void CellScene::grow()

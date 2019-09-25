@@ -26,16 +26,11 @@ void MainWindow::initWidgets()
     scene = new CellScene();
     mainWidget = new QWidget();
     mainLayout = new QHBoxLayout(mainWidget);
-    settingLayout = new QVBoxLayout();
+    settingLayout = scene->getCellNum();
     button = new QPushButton("Grow");
-    cellNumLabel = new QLabel("Cell Number:");
-    settingLayout->addWidget(cellNumLabel);
-    settingLayout->addWidget(scene->getValidCellNums());
     settingLayout->addWidget(button);
     settingLayout->setAlignment(Qt::AlignTop);
-    mainLayout->addWidget(scene->getView());
+    mainLayout->addWidget(scene->getMainView());
     mainLayout->addLayout(settingLayout);
-    button->setFocus();
-    button->setShortcut(Qt::Key_Enter);
     setCentralWidget(mainWidget);
 }

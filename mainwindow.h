@@ -1,18 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QGraphicsScene>
-#include <QGraphicsView>
 #include <QLayout>
 #include <QPushButton>
-#include <QLabel>
-#include <QLineEdit>
 #include <QComboBox>
 #include <QMainWindow>
-#include <QGraphicsItem>
-#include <QGraphicsSceneMouseEvent>
 #include <QList>
-#include <QDebug>
 
 #include "cellscene.h"
 
@@ -32,7 +25,6 @@ private:
     QHBoxLayout *mainLayout;
     QVBoxLayout *settingLayout;
     QPushButton *button;
-    QLabel *cellNumLabel;
     CellScene* scene;
 
     void initWidgets();
